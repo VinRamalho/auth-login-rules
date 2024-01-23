@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { JobSchema } from './schemas/job.schema';
+import { HydratedDocument, Model } from 'mongoose';
+import { JobDocument, JobSchema } from './schemas/job.schema';
 import { Crud } from 'src/crud/crud.abstract';
 
 @Injectable()
@@ -11,5 +11,19 @@ export class JobService extends Crud<JobSchema> {
     private readonly jobService: Model<JobSchema>,
   ) {
     super(jobService);
+  }
+
+  async findById(
+    id: string,
+  ): Promise<HydratedDocument<JobDocument> | undefined> {
+    const res = await super.findById(id, 'user');
+
+    return res;
+  }
+
+  async findAll(): Promise<HydratedDocument<JobDocument>[] | undefined> {
+    const res = await super.findAll('user', ['name', 'email']);
+
+    return res;
   }
 }

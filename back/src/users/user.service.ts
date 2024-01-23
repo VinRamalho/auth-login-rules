@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
 import { Crud } from 'src/crud/crud.abstract';
-import { UserSchema } from './schemas/user.schema';
+import { UserDocument, UserSchema } from './schemas/user.schema';
+import { UserDto } from './dto/user.dto';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService extends Crud<UserSchema> {
@@ -12,8 +14,26 @@ export class UserService extends Crud<UserSchema> {
     super(userModel);
   }
 
+  async create(createUserDto: UserDto) {
+    const { password } = createUserDto;
+
+    const passwordHash = await hash(password, 16);
+
+    const user: UserDto = { ...createUserDto, password: passwordHash };
+
+    return await super.create(user);
+  }
+
   async findByEmail(email: string) {
     const res = await super.findByField({ email });
+
+    return res;
+  }
+
+  async findById(
+    id: string,
+  ): Promise<HydratedDocument<UserDocument> | undefined> {
+    const res = await super.findById(id, 'jobs');
 
     return res;
   }

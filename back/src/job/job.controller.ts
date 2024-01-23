@@ -7,18 +7,38 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import { JobService } from './job.service';
 import { JobDto } from './dto/job.dto';
+import { UserDocument } from 'src/users/schemas/user.schema';
+import { UserService } from 'src/users/user.service';
 
 @Controller('job')
 export class JobController {
-  constructor(private readonly jobService: JobService) {}
+  constructor(
+    private readonly jobService: JobService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
-  async create(@Body() createJobDto: JobDto) {
+  async create(@Body() createJobDto: JobDto, @Request() req) {
     try {
-      return await this.jobService.create(createJobDto);
+      const user = req.user satisfies Pick<
+        UserDocument,
+        'email' | 'name' | '_id'
+      >;
+
+      const { _id } = user;
+
+      const res = await this.jobService.create({
+        ...createJobDto,
+        user: _id,
+      });
+
+      await this.userService.addItemById(_id, 'jobs', res._id);
+
+      return res;
     } catch (err: any) {
       console.error('ERR', err);
       throw err;

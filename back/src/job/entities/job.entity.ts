@@ -1,4 +1,5 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
 
 export class Job {
   @IsNotEmpty()
@@ -7,4 +8,6 @@ export class Job {
   description: string;
   @IsNotEmpty()
   price: number;
+  @IsOptional()
+  user?: User;
 }

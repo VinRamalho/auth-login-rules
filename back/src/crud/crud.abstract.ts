@@ -1,6 +1,6 @@
 // crud.abstract.ts
 import { Injectable } from '@nestjs/common';
-import { Model, Document, HydratedDocument } from 'mongoose';
+import { Model, Document, HydratedDocument, FilterQuery } from 'mongoose';
 import { Data } from 'src/data/data.abstract';
 
 @Injectable()
@@ -13,12 +13,19 @@ export abstract class Crud<T extends Document> extends Data<T> {
     return await super.createData(entity);
   }
 
-  async findAll(): Promise<HydratedDocument<T>[]> {
-    return await super.findDataAll();
+  async findAll(
+    populate?: string,
+    fieldsPopulate?: string[],
+  ): Promise<HydratedDocument<T>[]> {
+    return await super.findDataAll(populate, fieldsPopulate);
   }
 
-  async findById(id: string): Promise<HydratedDocument<T> | undefined> {
-    return await super.findDataById(id);
+  async findById(
+    id: string,
+    populate?: string,
+    fieldsPopulate?: string[],
+  ): Promise<HydratedDocument<T> | undefined> {
+    return await super.findDataById(id, populate, fieldsPopulate);
   }
 
   async findByField(
@@ -43,5 +50,14 @@ export abstract class Crud<T extends Document> extends Data<T> {
 
   async delete(id: string) {
     return await super.deleteData(id);
+  }
+
+  async addItemById(
+    id: string,
+    field: string,
+    updateEntity: Partial<T> | string,
+    rule?: FilterQuery<T>,
+  ): Promise<HydratedDocument<T> | undefined> {
+    return await super.addItemData(id, field, updateEntity, rule);
   }
 }
