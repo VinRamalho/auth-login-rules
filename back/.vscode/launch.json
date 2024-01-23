@@ -5,7 +5,7 @@
       "type": "node-terminal",
       "name": "api",
       "request": "launch",
-      "command": "npm run start:debugx",
+      "command": "npm run start:debug",
       "cwd": "${workspaceRoot}"
     }
   ]
