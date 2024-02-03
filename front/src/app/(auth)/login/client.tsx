@@ -27,6 +27,8 @@ export default function AuthLoginClient() {
       setRedirect("/app");
 
       return;
+    } else {
+      AuthService.signOut();
     }
 
     setLoading(false);
