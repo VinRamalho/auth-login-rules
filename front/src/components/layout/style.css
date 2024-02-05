@@ -1,21 +1,33 @@
-body {
-  display: grid;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--bg-04);
-  grid-template-areas:
-    "aside header"
-    "aside main";
-  grid-template-rows: 0.1fr 0.9fr;
-  grid-template-columns: 0.2fr 0.8fr;
-}
-
 main {
   height: 100vh;
-  width: 100%;
-  grid-area: main;
 }
 
-aside {
-  grid-area: aside;
+.div-login {
+  width: 100%;
+}
+
+.btn-collapse {
+  font-size: 16px;
+  width: 64px !important;
+  height: 64px !important;
+}
+
+header {
+  padding: 0 !important;
+  background: var(--bg-02) !important;
+}
+
+.navbar {
+  background: var(--bg-04) !important;
+}
+
+.ant-layout-header > div {
+  display: flex;
+}
+
+.header-name {
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
 }
