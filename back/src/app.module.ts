@@ -7,9 +7,11 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { JobsModule } from './job/job.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
       `${
         process.env.MONGO_URL ??
