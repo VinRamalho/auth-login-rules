@@ -15,10 +15,13 @@ export abstract class Data<T extends Document> {
     populate?: string,
     fieldsPopulate?: string[],
   ): Promise<HydratedDocument<T>[]> {
-    let query: any = this.model.find();
+    const query = this.model.find();
 
     if (populate) {
-      query = query.populate(populate, fieldsPopulate);
+      query.populate({
+        path: populate,
+        select: fieldsPopulate,
+      });
     }
 
     return await query.exec();
@@ -30,10 +33,13 @@ export abstract class Data<T extends Document> {
     fieldsPopulate?: string[],
   ): Promise<HydratedDocument<T> | undefined> {
     try {
-      let query: any = this.model.findById(id);
+      const query = this.model.findById(id);
 
       if (populate) {
-        query = query.populate(populate, fieldsPopulate);
+        query.populate({
+          path: populate,
+          select: fieldsPopulate,
+        });
       }
 
       const res = await query.exec();
