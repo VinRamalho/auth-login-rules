@@ -7,7 +7,6 @@ export abstract class Data<T extends Document> {
 
   protected async createData(entity: Partial<T>): Promise<HydratedDocument<T>> {
     const create = new this.model(entity);
-    console.log(entity);
     return await create.save();
   }
 
@@ -161,6 +160,40 @@ export abstract class Data<T extends Document> {
         .findOneAndUpdate(
           condition,
           { $push: { [field]: updateEntity } as any },
+          { new: true }, // Retorna o documento atualizado
+        )
+        .exec();
+
+      return res;
+    } catch (err) {
+      if (
+        err.name === 'CastError' &&
+        err.kind === 'ObjectId' &&
+        err.path === '_id'
+      ) {
+        return undefined;
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  protected async removeItemData(
+    id: string,
+    field: string,
+    updateEntity: Partial<T> | string,
+    rule?: FilterQuery<T>,
+  ): Promise<HydratedDocument<T> | undefined> {
+    try {
+      const condition: FilterQuery<T> = rule
+        ? { ...rule, _id: id }
+        : { _id: id };
+
+      console.log({ [field]: updateEntity });
+      const res = await this.model
+        .findOneAndUpdate(
+          condition,
+          { $pull: { [field]: updateEntity } as any },
           { new: true }, // Retorna o documento atualizado
         )
         .exec();

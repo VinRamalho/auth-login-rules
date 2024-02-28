@@ -84,9 +84,18 @@ export class JobController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string, @Request() req) {
     try {
+      const user = req.user satisfies Pick<
+        UserDocument,
+        'email' | 'name' | '_id'
+      >;
+
+      const { _id } = user;
+
       const res = await this.jobService.delete(id);
+
+      await this.userService.removeItemById(_id, 'jobs', id);
 
       if (!res) {
         throw new NotFoundException(`Not found Job: ${id}`);
