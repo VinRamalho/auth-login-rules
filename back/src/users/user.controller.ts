@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -53,6 +54,7 @@ export class UserController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UserDocument) {
     try {
+      throw new ForbiddenException('You are not allowed to do this');
       const res = await this.userService.update(id, updateUserDto);
       if (!res) {
         throw new NotFoundException(`Not found User: ${id}`);
