@@ -9,6 +9,8 @@ export class User {
   email: string;
   @IsNotEmpty()
   password: string;
+  @IsNotEmpty()
+  roles: string[];
   @IsOptional()
   jobs?: Job[];
 }

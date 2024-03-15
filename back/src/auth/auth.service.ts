@@ -32,16 +32,16 @@ export class AuthService {
   }
 
   private async generateAccessToken(user: UserDocument): Promise<string> {
-    const { email, name, _id } = user;
+    const { email, name, _id, roles } = user;
 
-    const payload = { _id, email, name };
+    const payload = { _id, email, name, roles };
     return this.jwtService.signAsync(payload, { expiresIn: '1h' });
   }
 
   private async generateRefreshToken(user: UserDocument): Promise<string> {
-    const { email, name, _id } = user;
+    const { email, name, _id, roles } = user;
 
-    const payload = { _id, email, name };
+    const payload = { _id, email, name, roles };
     return this.jwtService.signAsync(payload, {
       expiresIn: '7d',
       secret: jwtConstants.secret,

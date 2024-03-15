@@ -16,6 +16,9 @@ export class UserSchema extends Document implements User {
   @Prop()
   password: string;
 
+  @Prop()
+  roles: string[];
+
   @Prop({ type: [{ type: SchemaType.Types.ObjectId, ref: 'JobSchema' }] })
   jobs?: Job[];
 }
